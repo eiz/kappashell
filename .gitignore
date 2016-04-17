@@ -1,0 +1,7 @@
+/steamlink/
+*.o
+KappaShell
+moc_*
+Makefile
+*.pro.user
+
