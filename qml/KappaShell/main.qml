@@ -38,10 +38,19 @@ Window {
             anchors.top: parent.top
             anchors.topMargin: 30
             anchors.left: parent.left
-            anchors.leftMargin: 30
+            anchors.leftMargin: 15
             font.pointSize: 24
             text: "KappaShell"
             color: "white"
+        }
+
+        states: State {
+            name: "HIDDEN"
+            PropertyChanges { target: header; y: -header.height }
+        }
+
+        Behavior on y {
+            NumberAnimation { duration: 100; easing.type: Easing.OutQuad }
         }
     }
 
@@ -49,10 +58,9 @@ Window {
         id: sidebar
         focus: true
         anchors.top: header.bottom
-        anchors.topMargin: 30
+        anchors.topMargin: 15
         anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.leftMargin: 30
+        x: 15
         width: 200
         spacing: 5
         keyNavigationWraps: true
@@ -83,6 +91,15 @@ Window {
                 }
             }
         }
+
+        states: State {
+            name: "HIDDEN"
+            PropertyChanges { target: sidebar; x: -200 }
+        }
+
+        Behavior on x {
+            NumberAnimation { duration: 100; easing.type: Easing.OutQuad }
+        }
     }
 
     SLRoundedPanel {
@@ -90,7 +107,15 @@ Window {
         anchors.top: header.bottom
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.margins: 30
+        anchors.margins: 15
+    }
+
+    Controller.onButtonXPressed: {
+        sidebar.state = sidebar.state === "" ? "HIDDEN" : "";
+    }
+
+    Controller.onButtonYPressed: {
+        header.state = header.state === "" ? "HIDDEN" : "";
     }
 
     Controller.onButtonGuidePressed: Qt.quit()
