@@ -15,26 +15,18 @@
 // along with KappaShell.  If not, see <http://www.gnu.org/licenses/>.
 
 import QtQuick 2.0
-import org.e7m.steamlink 1.0
 
-ListView {
-    ControllerRepeat { id: repeat }
+Item {
+    property bool highlight: false
 
-    onFocusChanged: {
-        if (!focus) {
-            repeat.stop();
+    Rectangle {
+        anchors.fill: parent
+        opacity: highlight ? 0.5 : 0.1
+        radius: 5
+        color: "#888888"
+
+        Behavior on opacity {
+            NumberAnimation { duration: 100 }
         }
-    }
-
-    Controller.simulatedDpad: ControllerEventType.LeftThumbstick
-
-    Controller.onDpad: repeat.stop()
-
-    Controller.onDpadDownPressed: {
-        repeat.action(function() { incrementCurrentIndex(); });
-    }
-
-    Controller.onDpadUpPressed: {
-        repeat.action(function() { decrementCurrentIndex(); });
     }
 }
