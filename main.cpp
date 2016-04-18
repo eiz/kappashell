@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with KappaShell.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <QQmlApplicationEngine>
 #include <QtGui/QGuiApplication>
 #include <QFont>
 
 #include "controllerattached.h"
 #include "controllermanager.h"
-#include "qtquick2applicationviewer.h"
 
 static FILE *logFile;
 
@@ -57,7 +57,6 @@ static void logMessageHandler(
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-    QtQuick2ApplicationViewer viewer;
 
     // Start logging
     logFile = fopen("/tmp/kappashell.log", "w");
@@ -76,8 +75,7 @@ int main(int argc, char *argv[])
     app.installEventFilter(&controllerManager);
     ControllerAttached::initialize();
 
-    viewer.setMainQmlFile(QStringLiteral("qml/steamlink-qml-example/main.qml"));
-    viewer.showExpanded();
+    QQmlApplicationEngine engine("qml/KappaShell/main.qml");
 
     return app.exec();
 }

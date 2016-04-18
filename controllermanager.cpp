@@ -191,6 +191,12 @@ void CControllerManager::CheckGameControllers()
         case SDL_QUIT:
             QCoreApplication::quit();
             break;
+        case SDL_JOYBUTTONDOWN:
+        case SDL_JOYBUTTONUP:
+        case SDL_JOYAXISMOTION:
+            break; // ignore these for now.
+        case SDL_JOYHATMOTION:
+            break; // TODO: left touchpad comes through as a hat switch event.
         default:
             qWarning() << "Unhandled SDL event " << event.type;
             break;
@@ -570,6 +576,9 @@ void CControllerManager::SendControllerEvent( QEvent *pEvent )
     QQuickItem *receiver =
         qobject_cast<QQuickItem *>(QGuiApplication::focusObject());
 
+    // Bubble the event unless explicitly handled.
+    pEvent->setAccepted(false);
+
     while (receiver) {
         if (QGuiApplication::sendEvent(receiver, pEvent) &&
             pEvent->isAccepted() &&
@@ -579,6 +588,14 @@ void CControllerManager::SendControllerEvent( QEvent *pEvent )
         }
 
         receiver = receiver->parentItem();
+    }
+
+    if (!pEvent->isAccepted()) {
+        QWindow *window = QGuiApplication::focusWindow();
+
+        if (window) {
+            QGuiApplication::sendEvent(window, pEvent);
+        }
     }
 }
 

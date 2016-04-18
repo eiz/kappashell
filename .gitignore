@@ -1,6 +1,6 @@
 /steamlink/
 *.o
-KappaShell
+/KappaShell
 moc_*
 Makefile
 *.pro.user
