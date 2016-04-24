@@ -33,11 +33,39 @@ ListView {
 
     Controller.onDpad: repeat.stop()
 
+    Controller.onDpadLeftPressed: {
+        if (orientation == ListView.Vertical) {
+            event.accepted = false;
+            return;
+        }
+
+        repeat.action(function() { decrementCurrentIndex(); });
+    }
+
+    Controller.onDpadRightPressed: {
+        if (orientation == ListView.Vertical) {
+            event.accepted = false;
+            return;
+        }
+
+        repeat.action(function() { incrementCurrentIndex(); });
+    }
+
     Controller.onDpadDownPressed: {
+        if (orientation == ListView.Horizontal) {
+            event.accepted = false;
+            return;
+        }
+
         repeat.action(function() { incrementCurrentIndex(); });
     }
 
     Controller.onDpadUpPressed: {
+        if (orientation == ListView.Horizontal) {
+            event.accepted = false;
+            return;
+        }
+
         repeat.action(function() { decrementCurrentIndex(); });
     }
 }

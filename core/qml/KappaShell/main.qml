@@ -24,6 +24,24 @@ Window {
     visible: true
     visibility: Window.FullScreen
 
+    QtObject {
+        id: d
+
+        function loadPlugin(plugin, ui, parent, loader) {
+            var qmlString =
+                "import QtQuick 2.0;" +
+                "import " + plugin.namespaceName + " " + plugin.version +
+                " as Plugin;Component{Plugin." + plugin[ui + "Name"] + "{}}";
+
+            if (loader.sourceComponent) {
+                loader.sourceComponent.destroy();
+            }
+
+            loader.sourceComponent =
+                Qt.createQmlObject(qmlString, parent, "loadPlugin");
+        }
+    }
+
     Rectangle {
         color: "#101020"
         anchors.fill: parent
@@ -33,7 +51,7 @@ Window {
         id: header
         anchors.left: parent.left
         anchors.right: parent.right
-        color: "#101020"
+        color: "#181830"
         height: childrenRect.height + 60
 
         SLListView {
@@ -51,6 +69,7 @@ Window {
             model: PluginsModel {}
 
             delegate: SLRoundedPanel {
+                property variant modelData: plugin
                 id: wrapper
                 height: childrenRect.height
                 width: 200
@@ -59,6 +78,27 @@ Window {
                     anchors.left: parent.left; anchors.right: parent.right
                     horizontalAlignment: Text.AlignHCenter
                     color: wrapper.ListView.isCurrentItem ? "cyan" : "white"
+                }
+            }
+
+            Controller.onButtonAPressed: {
+                if (!currentItem) {
+                    return;
+                }
+
+                var plugin = currentItem.modelData;
+
+                if (!plugin.namespaceName || !plugin.version) {
+                    console.log("Can't load invalid plugin.");
+                    return;
+                }
+
+                if (plugin.sidebarName) {
+                    sidebar.loadPlugin(plugin);
+                }
+
+                if (plugin.homeName) {
+                    content.loadPlugin(plugin);
                 }
             }
         }
@@ -89,6 +129,15 @@ Window {
         Behavior on x {
             NumberAnimation { duration: 100; easing.type: Easing.OutQuad }
         }
+
+        Loader {
+            id: sidebarLoader
+            anchors.fill: parent
+        }
+
+        function loadPlugin(plugin) {
+            d.loadPlugin(plugin, "sidebar", this, sidebarLoader);
+        }
     }
 
     SLRoundedPanel {
@@ -98,6 +147,15 @@ Window {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.margins: 15
+
+        Loader {
+            id: contentLoader
+            anchors.fill: parent
+        }
+
+        function loadPlugin(plugin) {
+            d.loadPlugin(plugin, "home", this, contentLoader);
+        }
     }
 
     Controller.onButtonXPressed: {
