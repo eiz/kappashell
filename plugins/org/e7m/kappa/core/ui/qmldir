@@ -1,0 +1,6 @@
+module org.e7m.kappa.core.ui
+plugin org-e7m-kappa-core-ui
+typeinfo ui.qmltypes
+SLListView 1.0 SLListView.qml
+SLRoundedPanel 1.0 SLRoundedPanel.qml
+ControllerRepeat 1.0 ControllerRepeat.qml

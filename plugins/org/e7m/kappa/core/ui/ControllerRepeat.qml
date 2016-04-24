@@ -1,4 +1,4 @@
-// KappaShell
+// ks-core-ui
 // Copyright (C) 2016 Mackenzie Straight
 //
 // This program is free software: you can redistribute it and/or modify

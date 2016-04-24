@@ -5,19 +5,15 @@ source $STEAMLINK_HOME/setenv.sh
 
 qmake
 make $MAKE_J || exit 2
+make install INSTALL_ROOT=$PWD/build
 
-export DESTDIR="${PWD}/steamlink/apps/kappashell"
-
-# Copy the files to the app directory
-mkdir -p "${DESTDIR}"
-cp -v KappaShell "${DESTDIR}"
-cp -r qml "${DESTDIR}"
+export DESTDIR=$PWD/build/steamlink/apps/kappashell
 
 # Create the table of contents and icon
 cat >"${DESTDIR}/toc.txt" <<__EOF__
 name=Kappa Shell
 icon=icon.png
-run=KappaShell
+run=core
 __EOF__
 
 base64 -d >"${DESTDIR}/icon.png" <<__EOF__

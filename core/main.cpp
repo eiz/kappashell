@@ -75,7 +75,9 @@ int main(int argc, char *argv[])
     app.installEventFilter(&controllerManager);
     ControllerAttached::initialize();
 
-    QQmlApplicationEngine engine("qml/KappaShell/main.qml");
+    QQmlApplicationEngine engine;
+    engine.addImportPath("/mnt/disk/kappa/plugins");
+    engine.load("qml/KappaShell/main.qml");
 
     return app.exec();
 }

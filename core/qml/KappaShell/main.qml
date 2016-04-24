@@ -17,6 +17,7 @@
 import QtQuick 2.0
 import QtQuick.Window 2.2
 import org.e7m.steamlink 1.0
+import org.e7m.kappa.core.ui 1.0
 
 Window {
     visible: true

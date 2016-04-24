@@ -1,7 +1,9 @@
-/steamlink/
+/build/
 *.o
-/KappaShell
+*.so
+/core/core
 moc_*
 Makefile
 *.pro.user
+*.autosave
 
