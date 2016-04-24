@@ -80,12 +80,10 @@ ListView {
 
             switch (dir) {
             case ControllerEventDirection.N:
-                console.log("N");
                 ControllerRepeat.continueAction(
                     dir, this, function() { d.up(); });
                 break;
             case ControllerEventDirection.S:
-                console.log("S");
                 ControllerRepeat.continueAction(
                     dir, this, function() { d.down(); });
                 break;
