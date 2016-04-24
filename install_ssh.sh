@@ -5,6 +5,6 @@ if [ "$STEAMLINK_HOST" == "" ]; then
     exit 1
 fi
 
-scp -r build/kappa root@${STEAMLINK_HOST}:/mnt/disk
+scp -r build/* root@${STEAMLINK_HOST}:/mnt/disk
 scp -r build/steamlink/apps/* root@${STEAMLINK_HOST}:apps/
 
