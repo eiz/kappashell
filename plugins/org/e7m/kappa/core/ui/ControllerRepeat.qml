@@ -16,6 +16,7 @@
 
 pragma Singleton
 import QtQuick 2.0
+import org.e7m.steamlink 1.0
 
 Item {
     property alias debounceInterval: debounce.interval
@@ -47,9 +48,15 @@ Item {
         property int minInterval: 150
         property double intervalStep: 0.75
         property var action
+        property int direction
 
-        function startAction(a, resetInterval) {
+        function startAction(dir, a, resetInterval) {
             action = a;
+
+            if (direction !== dir) {
+                interval = maxInterval;
+                direction = dir;
+            }
 
             if (!running) {
                 if (resetInterval !== false) {
@@ -62,6 +69,7 @@ Item {
 
         function stopAction() {
             stop();
+            direction = ControllerEventDirection.Center
         }
 
         onTriggered: {
@@ -72,14 +80,14 @@ Item {
         }
     }
 
-    function continueAction(newInitiator, fn) {
+    function continueAction(dir, newInitiator, fn) {
         initiator = newInitiator;
-        repeat.startAction(fn, false);
+        repeat.startAction(dir, fn, false);
     }
 
-    function action(newInitiator, fn) {
+    function action(dir, newInitiator, fn) {
         initiator = newInitiator;
-        repeat.startAction(fn);
+        repeat.startAction(dir, fn);
         debounce.run(function() {
             fn();
         });

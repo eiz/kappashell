@@ -76,24 +76,26 @@ ListView {
         if (!activeFocus) {
             ControllerRepeat.stop(this);
         } else {
-            switch (Controller.lastDpadDirection) {
+            var dir = Controller.lastDpadDirection;
+
+            switch (dir) {
             case ControllerEventDirection.N:
                 console.log("N");
                 ControllerRepeat.continueAction(
-                    this, function() { d.up(); });
+                    dir, this, function() { d.up(); });
                 break;
             case ControllerEventDirection.S:
                 console.log("S");
                 ControllerRepeat.continueAction(
-                    this, function() { d.down(); });
+                    dir, this, function() { d.down(); });
                 break;
             case ControllerEventDirection.E:
                 ControllerRepeat.continueAction(
-                    this, function() { d.right(); });
+                    dir, this, function() { d.right(); });
                 break;
             case ControllerEventDirection.W:
                 ControllerRepeat.continueAction(
-                    this, function() { d.left(); });
+                    dir, this, function() { d.left(); });
                 break;
             }
         }
@@ -103,26 +105,22 @@ ListView {
     Controller.onDpadCenterPressed: ControllerRepeat.stop(this);
 
     Controller.onDpadLeftPressed: {
-        if (orientation == ListView.Vertical) {
-            ControllerRepeat.action(function() {
-                navigateLeft();
-            });
-
-            return;
-        }
-
-        ControllerRepeat.action(this, function() { d.left(); });
+        ControllerRepeat.action(
+            event.direction, this, function() { d.left(); });
     }
 
     Controller.onDpadRightPressed: {
-        ControllerRepeat.action(this, function() { d.right(); });
+        ControllerRepeat.action(
+            event.direction, this, function() { d.right(); });
     }
 
     Controller.onDpadDownPressed: {
-        ControllerRepeat.action(this, function() { d.down(); });
+        ControllerRepeat.action(
+            event.direction, this, function() { d.down(); });
     }
 
     Controller.onDpadUpPressed: {
-        ControllerRepeat.action(this, function() { d.up(); });
+        ControllerRepeat.action(
+            event.direction, this, function() { d.up(); });
     }
 }
