@@ -16,34 +16,37 @@
 
 import QtQuick 2.0
 import org.e7m.steamlink 1.0
+import org.e7m.kappa.core.ui 1.0
 
 ListView {
-    signal navigateBeforeFirst()
-    signal navigateAfterLast()
+    signal navigateLeft()
+    signal navigateRight()
+    signal navigateDown()
+    signal navigateUp()
 
     spacing: 5
 
-    ControllerRepeat { id: repeat }
-
     onActiveFocusChanged: {
         if (!activeFocus) {
-            repeat.stop();
+            ControllerRepeat.stop();
         }
     }
 
     Controller.simulatedDpad: ControllerEventType.LeftThumbstick
-
-    Controller.onDpad: repeat.stop()
+    Controller.onDpadCenterPressed: ControllerRepeat.stop();
 
     Controller.onDpadLeftPressed: {
         if (orientation == ListView.Vertical) {
-            event.accepted = false;
+            ControllerRepeat.action(function() {
+                navigateLeft();
+            });
+
             return;
         }
 
-        repeat.action(function() {
+        ControllerRepeat.action(function() {
             if (currentIndex == 0) {
-                navigateBeforeFirst();
+                navigateLeft();
             } else {
                 decrementCurrentIndex();
             }
@@ -52,13 +55,16 @@ ListView {
 
     Controller.onDpadRightPressed: {
         if (orientation == ListView.Vertical) {
-            event.accepted = false;
+            ControllerRepeat.action(function() {
+                navigateRight();
+            });
+
             return;
         }
 
-        repeat.action(function() {
+        ControllerRepeat.action(function() {
             if (currentIndex == count - 1) {
-                navigateAfterLast();
+                navigateRight();
             } else {
                 incrementCurrentIndex();
             }
@@ -67,13 +73,16 @@ ListView {
 
     Controller.onDpadDownPressed: {
         if (orientation == ListView.Horizontal) {
-            event.accepted = false;
+            ControllerRepeat.action(function() {
+                navigateDown();
+            });
+
             return;
         }
 
-        repeat.action(function() {
+        ControllerRepeat.action(function() {
             if (currentIndex == count - 1) {
-                navigateAfterLast();
+                navigateDown();
             } else {
                 incrementCurrentIndex();
             }
@@ -82,13 +91,16 @@ ListView {
 
     Controller.onDpadUpPressed: {
         if (orientation == ListView.Horizontal) {
-            event.accepted = false;
+            ControllerRepeat.action(function() {
+                navigateUp();
+            });
+
             return;
         }
 
-        repeat.action(function() {
+        ControllerRepeat.action(function() {
             if (currentIndex == 0) {
-                navigateBeforeFirst();
+                navigateUp();
             } else {
                 decrementCurrentIndex();
             }

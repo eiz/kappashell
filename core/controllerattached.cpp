@@ -6,9 +6,6 @@
 #include <QtGui>
 #include "controllerattached.h"
 
-QControllerEvent::Direction ControllerAttached::_lastDpadDirection =
-    QControllerEvent::DIRECTION_CENTER;
-
 ControllerAttached::ControllerAttached(QObject *parent) :
     QObject(parent)
 {

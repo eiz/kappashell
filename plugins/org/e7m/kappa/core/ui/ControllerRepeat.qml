@@ -1,4 +1,4 @@
-// ks-core-ui
+// KappaShell
 // Copyright (C) 2016 Mackenzie Straight
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with KappaShell.  If not, see <http://www.gnu.org/licenses/>.
 
+pragma Singleton
 import QtQuick 2.0
 
 Item {
@@ -32,6 +33,8 @@ Item {
                 isTriggered = true;
                 debounce.start();
                 fn();
+            } else {
+                console.log("debounced event");
             }
         }
 

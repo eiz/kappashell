@@ -151,8 +151,8 @@ Window {
             focus: true
 
             onLoaded: {
-                if (item && item.navigateBeforeFirst) {
-                    item.navigateBeforeFirst.connect(function () {
+                if (item && item.navigateUp) {
+                    item.navigateUp.connect(function () {
                         headerList.focus = true;
                     });
                 }
