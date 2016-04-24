@@ -36,7 +36,6 @@ PluginInfo::PluginInfo(const QString& path, QObject *parent) :
 
     if (jNamespace.isString()) {
         _namespaceName = jNamespace.toString();
-        qDebug() << "derp derp" << _namespaceName;
     }
 
     if (jVersion.isString()) {

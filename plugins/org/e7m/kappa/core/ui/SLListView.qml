@@ -18,13 +18,15 @@ import QtQuick 2.0
 import org.e7m.steamlink 1.0
 
 ListView {
+    signal navigateBeforeFirst()
+    signal navigateAfterLast()
+
     spacing: 5
-    keyNavigationWraps: true
 
     ControllerRepeat { id: repeat }
 
-    onFocusChanged: {
-        if (!focus) {
+    onActiveFocusChanged: {
+        if (!activeFocus) {
             repeat.stop();
         }
     }
@@ -39,7 +41,13 @@ ListView {
             return;
         }
 
-        repeat.action(function() { decrementCurrentIndex(); });
+        repeat.action(function() {
+            if (currentIndex == 0) {
+                navigateBeforeFirst();
+            } else {
+                decrementCurrentIndex();
+            }
+        });
     }
 
     Controller.onDpadRightPressed: {
@@ -48,7 +56,13 @@ ListView {
             return;
         }
 
-        repeat.action(function() { incrementCurrentIndex(); });
+        repeat.action(function() {
+            if (currentIndex == count - 1) {
+                navigateAfterLast();
+            } else {
+                incrementCurrentIndex();
+            }
+        });
     }
 
     Controller.onDpadDownPressed: {
@@ -57,7 +71,13 @@ ListView {
             return;
         }
 
-        repeat.action(function() { incrementCurrentIndex(); });
+        repeat.action(function() {
+            if (currentIndex == count - 1) {
+                navigateAfterLast();
+            } else {
+                incrementCurrentIndex();
+            }
+        });
     }
 
     Controller.onDpadUpPressed: {
@@ -66,6 +86,12 @@ ListView {
             return;
         }
 
-        repeat.action(function() { decrementCurrentIndex(); });
+        repeat.action(function() {
+            if (currentIndex == 0) {
+                navigateBeforeFirst();
+            } else {
+                decrementCurrentIndex();
+            }
+        });
     }
 }

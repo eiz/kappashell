@@ -30,7 +30,7 @@ SLListView {
         id: wrapper
         width: 200
         height: 30
-        highlight: ListView.isCurrentItem
+        highlight: activeFocus
 
         Text {
             anchors.fill: parent

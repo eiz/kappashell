@@ -32,7 +32,7 @@ private:
             int tableValue);
 
     int _simulatedDpad;
-    QControllerEvent::Direction _lastDpadDirection;
+    static QControllerEvent::Direction _lastDpadDirection;
 
 signals:
     void pressed(QuickControllerEvent *event);

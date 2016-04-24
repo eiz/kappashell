@@ -43,7 +43,7 @@ Window {
     }
 
     Rectangle {
-        color: "#101020"
+        color: "black"
         anchors.fill: parent
     }
 
@@ -51,12 +51,13 @@ Window {
         id: header
         anchors.left: parent.left
         anchors.right: parent.right
-        color: "#181830"
-        height: childrenRect.height + 60
+        color: "black"
+        height: childrenRect.height + 15
 
         SLListView {
+            id: headerList
             anchors.top: parent.top
-            anchors.topMargin: 30
+            anchors.topMargin: 15
             anchors.left: parent.left
             anchors.leftMargin: 15
             anchors.right: parent.right
@@ -73,6 +74,8 @@ Window {
                 id: wrapper
                 height: childrenRect.height
                 width: 200
+                highlight: activeFocus
+
                 Text {
                     text: name; font.pointSize: 24;
                     anchors.left: parent.left; anchors.right: parent.right
@@ -101,6 +104,14 @@ Window {
                     content.loadPlugin(plugin);
                 }
             }
+
+            Controller.onDpadDownPressed: {
+                if (sidebar.isHidden()) {
+                    content.focus = true;
+                } else {
+                    sidebar.focus = true;
+                }
+            }
         }
 
         states: State {
@@ -111,9 +122,13 @@ Window {
         Behavior on y {
             NumberAnimation { duration: 100; easing.type: Easing.OutQuad }
         }
+
+        function isHidden() {
+            return state === "HIDDEN";
+        }
     }
 
-    Item {
+    FocusScope {
         id: sidebar
         anchors.top: header.bottom
         anchors.topMargin: 15
@@ -133,14 +148,27 @@ Window {
         Loader {
             id: sidebarLoader
             anchors.fill: parent
+            focus: true
+
+            onLoaded: {
+                if (item && item.navigateBeforeFirst) {
+                    item.navigateBeforeFirst.connect(function () {
+                        headerList.focus = true;
+                    });
+                }
+            }
         }
 
         function loadPlugin(plugin) {
             d.loadPlugin(plugin, "sidebar", this, sidebarLoader);
         }
+
+        function isHidden() {
+            return state === "HIDDEN";
+        }
     }
 
-    SLRoundedPanel {
+    FocusScope {
         id: content
         anchors.left: sidebar.right
         anchors.top: header.bottom
@@ -148,9 +176,15 @@ Window {
         anchors.right: parent.right
         anchors.margins: 15
 
-        Loader {
-            id: contentLoader
+        SLRoundedPanel {
+            id: contentPanel
             anchors.fill: parent
+
+            Loader {
+                id: contentLoader
+                anchors.fill: parent
+                focus: true
+            }
         }
 
         function loadPlugin(plugin) {
