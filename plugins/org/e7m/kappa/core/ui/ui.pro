@@ -20,7 +20,9 @@ OTHER_FILES = qmldir \
     ui.qmltypes \
     kappa.json \
     KSHomeMenu.qml \
-    KSHomeMain.qml
+    KSHomeMain.qml \
+    KSHomePlugins.qml \
+    KSHomeSettings.qml
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir

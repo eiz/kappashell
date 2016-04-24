@@ -18,16 +18,18 @@ import QtQuick 2.0
 import org.e7m.steamlink 1.0
 
 SLListView {
+    signal contentSelected(string ui)
     focus: true
 
     model: ListModel {
-        ListElement { name: "Home" }
-        ListElement { name: "Plugins" }
-        ListElement { name: "Settings" }
+        ListElement { name: "Home"; ui: "KSHomeMain" }
+        ListElement { name: "Plugins"; ui: "KSHomePlugins" }
+        ListElement { name: "Settings"; ui: "KSHomeSettings" }
     }
 
     delegate: SLRoundedPanel {
         id: wrapper
+        property variant modelData: model
         width: 200
         height: 30
         highlight: activeFocus
@@ -43,6 +45,12 @@ SLListView {
             Behavior on color {
                 ColorAnimation { duration: 100 }
             }
+        }
+    }
+
+    Controller.onButtonAPressed: {
+        if (currentItem) {
+            contentSelected(currentItem.modelData.ui);
         }
     }
 }

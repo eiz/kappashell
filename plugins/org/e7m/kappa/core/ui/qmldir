@@ -6,3 +6,5 @@ SLRoundedPanel 1.0 SLRoundedPanel.qml
 singleton ControllerRepeat 1.0 ControllerRepeat.qml
 KSHomeMenu 1.0 KSHomeMenu.qml
 KSHomeMain 1.0 KSHomeMain.qml
+KSHomePlugins 1.0 KSHomePlugins.qml
+KSHomeSettings 1.0 KSHomeSettings.qml

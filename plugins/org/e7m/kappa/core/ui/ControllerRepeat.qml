@@ -22,6 +22,7 @@ Item {
     property alias maxRepeatInterval: repeat.maxInterval
     property alias minRepeatInterval: repeat.minInterval
     property alias repeatIntervalStep: repeat.intervalStep
+    property variant initiator;
 
     Timer {
         id: debounce
@@ -33,8 +34,6 @@ Item {
                 isTriggered = true;
                 debounce.start();
                 fn();
-            } else {
-                console.log("debounced event");
             }
         }
 
@@ -49,11 +48,14 @@ Item {
         property double intervalStep: 0.75
         property var action
 
-        function startAction(a) {
+        function startAction(a, resetInterval) {
             action = a;
 
             if (!running) {
-                interval = maxInterval
+                if (resetInterval !== false) {
+                    interval = maxInterval;
+                }
+
                 start();
             }
         }
@@ -70,14 +72,24 @@ Item {
         }
     }
 
-    function action(fn) {
+    function continueAction(newInitiator, fn) {
+        initiator = newInitiator;
+        repeat.startAction(fn, false);
+    }
+
+    function action(newInitiator, fn) {
+        initiator = newInitiator;
+        repeat.startAction(fn);
         debounce.run(function() {
-            repeat.startAction(fn);
             fn();
         });
     }
 
-    function stop() {
+    function stop(oldInitiator) {
+        if (initiator !== oldInitiator) {
+            return;
+        }
+
         repeat.stopAction();
     }
 }

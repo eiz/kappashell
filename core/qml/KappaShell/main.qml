@@ -28,14 +28,18 @@ Window {
         id: d
 
         function loadPlugin(plugin, ui, parent, loader) {
-            var qmlString =
-                "import QtQuick 2.0;" +
-                "import " + plugin.namespaceName + " " + plugin.version +
-                " as Plugin;Component{Plugin." + plugin[ui + "Name"] + "{}}";
-
             if (loader.sourceComponent) {
                 loader.sourceComponent.destroy();
             }
+
+            if (!plugin) {
+                loader.sourceComponent = null;
+            }
+
+            var qmlString =
+                "import QtQuick 2.0;" +
+                "import " + plugin.namespaceName + " " + plugin.version +
+                " as Plugin;Component{Plugin." + ui + "{}}";
 
             loader.sourceComponent =
                 Qt.createQmlObject(qmlString, parent, "loadPlugin");
@@ -98,10 +102,14 @@ Window {
 
                 if (plugin.sidebarName) {
                     sidebar.loadPlugin(plugin);
+                } else {
+                    sidebar.loadPlugin(null);
                 }
 
                 if (plugin.homeName) {
                     content.loadPlugin(plugin);
+                } else {
+                    content.loadPlugin(null);
                 }
             }
 
@@ -130,6 +138,7 @@ Window {
 
     FocusScope {
         id: sidebar
+        property variant activePlugin
         anchors.top: header.bottom
         anchors.topMargin: 15
         anchors.bottom: parent.bottom
@@ -156,11 +165,40 @@ Window {
                         headerList.focus = true;
                     });
                 }
+
+                if (item && item.navigateRight) {
+                    item.navigateRight.connect(function() {
+                        content.focus = true;
+                    });
+                }
+
+                if (item && item.contentSelected) {
+                    item.contentSelected.connect(function(ui) {
+                        content.loadPlugin(sidebar.activePlugin, ui);
+                    });
+                }
             }
         }
 
-        function loadPlugin(plugin) {
-            d.loadPlugin(plugin, "sidebar", this, sidebarLoader);
+        function loadPlugin(plugin, ui) {
+            activePlugin = plugin;
+            d.loadPlugin(
+                plugin, ui || plugin && plugin.sidebarName,
+                this, sidebarLoader);
+
+            if (!plugin) {
+                hide();
+            }
+        }
+
+        function show() {
+            if (activePlugin) {
+                state = "";
+            }
+        }
+
+        function hide() {
+            state = "HIDDEN";
         }
 
         function isHidden() {
@@ -170,6 +208,7 @@ Window {
 
     FocusScope {
         id: content
+        property variant activePlugin
         anchors.left: sidebar.right
         anchors.top: header.bottom
         anchors.bottom: parent.bottom
@@ -187,13 +226,19 @@ Window {
             }
         }
 
-        function loadPlugin(plugin) {
-            d.loadPlugin(plugin, "home", this, contentLoader);
+        function loadPlugin(plugin, ui) {
+            activePlugin = plugin;
+            d.loadPlugin(
+                plugin, ui || (plugin && plugin.homeName), this, contentLoader);
         }
     }
 
     Controller.onButtonXPressed: {
-        sidebar.state = sidebar.state === "" ? "HIDDEN" : "";
+        if (sidebar.isHidden()) {
+            sidebar.show();
+        } else {
+            sidebar.hide();
+        }
     }
 
     Controller.onButtonYPressed: {

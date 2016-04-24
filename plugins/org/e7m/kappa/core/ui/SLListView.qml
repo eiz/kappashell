@@ -19,21 +19,88 @@ import org.e7m.steamlink 1.0
 import org.e7m.kappa.core.ui 1.0
 
 ListView {
+    id: view
+
     signal navigateLeft()
     signal navigateRight()
     signal navigateDown()
     signal navigateUp()
 
+    QtObject {
+        id: d
+
+        function left() {
+            if (view.orientation == ListView.Vertical ||
+                currentIndex == 0) {
+
+                view.navigateLeft();
+            } else {
+                view.decrementCurrentIndex();
+            }
+        }
+
+        function right() {
+            if (view.orientation == ListView.Vertical ||
+                currentIndex == count - 1) {
+
+                navigateRight();
+            } else {
+                incrementCurrentIndex();
+            }
+        }
+
+        function down() {
+            if (view.orientation == ListView.Horizontal ||
+                currentIndex == count - 1) {
+
+                navigateDown();
+            } else {
+                incrementCurrentIndex();
+            }
+        }
+
+        function up() {
+            if (view.orientation == ListView.Horizontal ||
+                currentIndex == 0) {
+
+                navigateUp();
+            } else {
+                decrementCurrentIndex();
+            }
+        }
+    }
+
     spacing: 5
 
     onActiveFocusChanged: {
         if (!activeFocus) {
-            ControllerRepeat.stop();
+            ControllerRepeat.stop(this);
+        } else {
+            switch (Controller.lastDpadDirection) {
+            case ControllerEventDirection.N:
+                console.log("N");
+                ControllerRepeat.continueAction(
+                    this, function() { d.up(); });
+                break;
+            case ControllerEventDirection.S:
+                console.log("S");
+                ControllerRepeat.continueAction(
+                    this, function() { d.down(); });
+                break;
+            case ControllerEventDirection.E:
+                ControllerRepeat.continueAction(
+                    this, function() { d.right(); });
+                break;
+            case ControllerEventDirection.W:
+                ControllerRepeat.continueAction(
+                    this, function() { d.left(); });
+                break;
+            }
         }
     }
 
     Controller.simulatedDpad: ControllerEventType.LeftThumbstick
-    Controller.onDpadCenterPressed: ControllerRepeat.stop();
+    Controller.onDpadCenterPressed: ControllerRepeat.stop(this);
 
     Controller.onDpadLeftPressed: {
         if (orientation == ListView.Vertical) {
@@ -44,66 +111,18 @@ ListView {
             return;
         }
 
-        ControllerRepeat.action(function() {
-            if (currentIndex == 0) {
-                navigateLeft();
-            } else {
-                decrementCurrentIndex();
-            }
-        });
+        ControllerRepeat.action(this, function() { d.left(); });
     }
 
     Controller.onDpadRightPressed: {
-        if (orientation == ListView.Vertical) {
-            ControllerRepeat.action(function() {
-                navigateRight();
-            });
-
-            return;
-        }
-
-        ControllerRepeat.action(function() {
-            if (currentIndex == count - 1) {
-                navigateRight();
-            } else {
-                incrementCurrentIndex();
-            }
-        });
+        ControllerRepeat.action(this, function() { d.right(); });
     }
 
     Controller.onDpadDownPressed: {
-        if (orientation == ListView.Horizontal) {
-            ControllerRepeat.action(function() {
-                navigateDown();
-            });
-
-            return;
-        }
-
-        ControllerRepeat.action(function() {
-            if (currentIndex == count - 1) {
-                navigateDown();
-            } else {
-                incrementCurrentIndex();
-            }
-        });
+        ControllerRepeat.action(this, function() { d.down(); });
     }
 
     Controller.onDpadUpPressed: {
-        if (orientation == ListView.Horizontal) {
-            ControllerRepeat.action(function() {
-                navigateUp();
-            });
-
-            return;
-        }
-
-        ControllerRepeat.action(function() {
-            if (currentIndex == 0) {
-                navigateUp();
-            } else {
-                decrementCurrentIndex();
-            }
-        });
+        ControllerRepeat.action(this, function() { d.up(); });
     }
 }

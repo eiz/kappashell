@@ -6,10 +6,12 @@
 #include <QtGui>
 #include "controllerattached.h"
 
+QControllerEvent::Direction ControllerAttached::_lastDpadDirection =
+        QControllerEvent::DIRECTION_CENTER;
+
 ControllerAttached::ControllerAttached(QObject *parent) :
     QObject(parent)
 {
-    _lastDpadDirection = QControllerEvent::DIRECTION_CENTER;
     _simulatedDpad = QControllerEvent::NONE;
     parent->installEventFilter(this);
 }
