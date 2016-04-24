@@ -18,6 +18,9 @@ import QtQuick 2.0
 import org.e7m.steamlink 1.0
 
 ListView {
+    spacing: 5
+    keyNavigationWraps: true
+
     ControllerRepeat { id: repeat }
 
     onFocusChanged: {

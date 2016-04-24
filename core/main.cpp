@@ -20,6 +20,7 @@
 
 #include "controllerattached.h"
 #include "controllermanager.h"
+#include "pluginsmodel.h"
 
 static FILE *logFile;
 
@@ -74,6 +75,9 @@ int main(int argc, char *argv[])
     CControllerManager controllerManager(&app);
     app.installEventFilter(&controllerManager);
     ControllerAttached::initialize();
+
+    qmlRegisterType<PluginsModel>(
+        "org.e7m.kappa.core.private", 1, 0, "PluginsModel");
 
     QQmlApplicationEngine engine;
     engine.addImportPath("/mnt/disk/kappa/plugins");

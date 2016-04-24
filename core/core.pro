@@ -13,7 +13,9 @@ DEPLOYMENTFOLDERS = folder_01
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     controllerattached.cpp \
-    controllermanager.cpp
+    controllermanager.cpp \
+    pluginsmodel.cpp \
+    plugininfo.cpp
 
 target.path = /steamlink/apps/kappashell
 
@@ -32,4 +34,6 @@ qtcAddDeployment()
 
 HEADERS += \
     controllerattached.h \
-    controllermanager.h
+    controllermanager.h \
+    pluginsmodel.h \
+    plugininfo.h

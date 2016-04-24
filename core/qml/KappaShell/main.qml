@@ -18,6 +18,7 @@ import QtQuick 2.0
 import QtQuick.Window 2.2
 import org.e7m.steamlink 1.0
 import org.e7m.kappa.core.ui 1.0
+import org.e7m.kappa.core.private 1.0
 
 Window {
     visible: true
@@ -32,17 +33,34 @@ Window {
         id: header
         anchors.left: parent.left
         anchors.right: parent.right
-        color: "#202040"
+        color: "#101020"
         height: childrenRect.height + 60
 
-        Text {
+        SLListView {
             anchors.top: parent.top
             anchors.topMargin: 30
             anchors.left: parent.left
             anchors.leftMargin: 15
-            font.pointSize: 24
-            text: "KappaShell"
-            color: "white"
+            anchors.right: parent.right
+            anchors.rightMargin: 15
+            height: contentItem.childrenRect.height
+            orientation: ListView.Horizontal
+            spacing: 20
+            focus: true
+
+            model: PluginsModel {}
+
+            delegate: SLRoundedPanel {
+                id: wrapper
+                height: childrenRect.height
+                width: 200
+                Text {
+                    text: name; font.pointSize: 24;
+                    anchors.left: parent.left; anchors.right: parent.right
+                    horizontalAlignment: Text.AlignHCenter
+                    color: wrapper.ListView.isCurrentItem ? "cyan" : "white"
+                }
+            }
         }
 
         states: State {
@@ -55,43 +73,13 @@ Window {
         }
     }
 
-    SLListView {
+    Item {
         id: sidebar
-        focus: true
         anchors.top: header.bottom
         anchors.topMargin: 15
         anchors.bottom: parent.bottom
         x: 15
         width: 200
-        spacing: 5
-        keyNavigationWraps: true
-
-        model: ListModel {
-            ListElement { name: "Following" }
-            ListElement { name: "Games" }
-            ListElement { name: "Channels" }
-            ListElement { name: "Settings" }
-        }
-
-        delegate: SLRoundedPanel {
-            id: wrapper
-            width: 200
-            height: 30
-            highlight: ListView.isCurrentItem
-
-            Text {
-                anchors.fill: parent
-                id: label
-                text: name
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                color: wrapper.ListView.isCurrentItem ? "cyan" : "white"
-
-                Behavior on color {
-                    ColorAnimation { duration: 100 }
-                }
-            }
-        }
 
         states: State {
             name: "HIDDEN"
@@ -104,6 +92,7 @@ Window {
     }
 
     SLRoundedPanel {
+        id: content
         anchors.left: sidebar.right
         anchors.top: header.bottom
         anchors.bottom: parent.bottom
