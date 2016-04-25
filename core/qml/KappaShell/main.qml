@@ -68,7 +68,7 @@ Window {
             anchors.rightMargin: 15
             height: contentItem.childrenRect.height
             orientation: ListView.Horizontal
-            spacing: 20
+            spacing: 15
             focus: true
 
             model: PluginsModel {}
@@ -223,6 +223,16 @@ Window {
                 id: contentLoader
                 anchors.fill: parent
                 focus: true
+
+                onLoaded: {
+                    if (item && item.navigateLeft) {
+                        item.navigateLeft.connect(function() {
+                            if (!sidebar.isHidden()) {
+                                sidebar.focus = true;
+                            }
+                        });
+                    }
+                }
             }
         }
 
