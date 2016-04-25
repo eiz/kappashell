@@ -218,6 +218,7 @@ Window {
         SLRoundedPanel {
             id: contentPanel
             anchors.fill: parent
+            clip: true
 
             Loader {
                 id: contentLoader
